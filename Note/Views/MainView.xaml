@@ -1,0 +1,166 @@
+﻿<Window x:Class="Note.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Note.Views"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="便签"
+        Height="550"
+        Width="450"
+        xmlns:vm="clr-namespace:Note.ViewModels"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+        xmlns:helper="clr-namespace:Note.Helper"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Topmost="True"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Loaded="MainView_Loaded">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome ResizeBorderThickness="5"
+                            CaptionHeight="0"
+                            CornerRadius="0" />
+    </shell:WindowChrome.WindowChrome>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <!--content-->
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <!--left-->
+        <Grid x:Name="grid"
+              Width="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Text="便签列表"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0 10 0 0" />
+            <ListBox Grid.Row="1"
+                     Margin="0 0 0 10"
+                     ItemsSource="{Binding Works}"
+                     SelectedItem="{Binding Work}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Title}"
+                                           FontSize="16"
+                                           Margin="15,0" />
+                                <Rectangle Height="10" />
+                                <TextBlock Text="{Binding InsertDate,StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                           FontSize="12"
+                                           Foreground="Gray"
+                                           Margin="15,0" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <!--right-->
+        <Grid Grid.Column="1"
+              Margin="10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackPanel x:Name="ColorZone"
+                        Grid.Row="0"
+                        Height="50"
+                        Margin="0">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <Button Click="Button_Click"
+                            Padding="-5"
+                            BorderThickness="0">
+                        <Button.Content>
+                            <Image Source="/Images/path.png" />
+                        </Button.Content>
+                    </Button>
+                    <Rectangle Width="10" />
+                    <Button Content="新建"
+                            Command="{Binding CreateWorkCommand}" />
+                    <TextBlock Text="标题:"
+                               VerticalAlignment="Center" />
+                    <TextBox MinWidth="200"
+                             MaxWidth="600"
+                             FontSize="16"
+                             MaxLength="10"
+                             Text="{Binding Work.Title,UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Content="删除"
+                            Command="{Binding DeleteWorkCommand}"
+                            CommandParameter="{Binding Work}" />
+                    <Button Content="保存"
+                            Command="{Binding SaveWorkCommand}" />
+                </StackPanel>
+               
+            </StackPanel>
+
+            <!-- 工具栏 -->
+            <ToolBar Grid.Row="1">
+                <Button Name="BtnBold"
+                        Content="B"
+                        FontWeight="Bold"
+                        Click="BtnBold_Click"
+                        Width="30"
+                        ToolTip="加粗" />
+                <Button Name="BtnUnderline"
+                        Content="U"
+                        Click="BtnUnderline_Click"
+                        Width="30"
+                        ToolTip="下划线" />
+                <Button Name="BtnStrikethrough"
+                        Content="S"
+                        Click="BtnStrikethrough_Click"
+                        Width="30"
+                        ToolTip="横线" />
+                <Button Name="BtnItalic"
+                        Content="I"
+                        Click="BtnItalic_Click"
+                        Width="30"
+                        ToolTip="斜体" />
+            </ToolBar>
+
+            <!-- 富文本编辑区 -->
+            <RichTextBox Name="RichEditBox"
+                         Grid.Row="2"
+                         FontSize="18"
+                         Margin="10"
+                         FontFamily="Microsoft YaHei">
+                <RichTextBox.Resources>
+                    <!-- 隐式样式：所有 Paragraph 的 Margin 设为 0 -->
+                    <Style TargetType="Paragraph">
+                        <Setter Property="Margin"
+                                Value="0" />
+                    </Style>
+                </RichTextBox.Resources>
+                <FlowDocument>
+                    <Paragraph>
+                        <Run FontWeight="Bold">欢迎使用便签工具</Run>
+                        <LineBreak />
+                        字体大小默认为 18，你可以开始编辑了。
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+
+        </Grid>
+    </Grid>
+
+
+</Window>
