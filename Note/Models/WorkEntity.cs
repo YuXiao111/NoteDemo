@@ -21,6 +21,9 @@ namespace Note.Models
         //public string content = string.Empty;
 
         [ObservableProperty]
+        public int complete = 0;
+
+        [ObservableProperty]
         public DateTime? insertDate = null;
     }
 }

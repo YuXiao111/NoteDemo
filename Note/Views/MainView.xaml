@@ -7,8 +7,8 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="便签"
-        Height="550"
-        Width="450"
+        Height="450"
+        Width="400"
         xmlns:vm="clr-namespace:Note.ViewModels"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         xmlns:helper="clr-namespace:Note.Helper"
@@ -16,7 +16,9 @@
         Topmost="True"
         WindowStyle="None"
         AllowsTransparency="True"
-        Loaded="MainView_Loaded">
+        Loaded="MainView_Loaded"
+        Background="Transparent"
+        xmlns:cv="clr-namespace:Note.Converter">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome ResizeBorderThickness="5"
                             CaptionHeight="0"
@@ -27,140 +29,204 @@
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-
+    <Window.Resources>
+        <cv:BoolToIsEnabledConverter x:Key="BoolToIsEnabledConverter" />
+        <cv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverters" />
+    </Window.Resources>
     <!--content-->
+    <Border Margin="10"
+            CornerRadius="7"
+            Background="White"
+            BorderThickness="0">
+        <Border.Effect>
+            <!-- 优化阴影参数 -->
+            <DropShadowEffect BlurRadius="15"
+                              Direction="270"
+                              Opacity="0.8"
+                              ShadowDepth="5"
+                              Color="#40000000" />
+        </Border.Effect>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--left-->
+            <Grid x:Name="grid"
+                  Width="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="便签列表"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0 10 0 0" />
+                <ListBox Grid.Row="1"
+                         Margin="10 10 0 10"
+                         ItemsSource="{Binding Works}"
+                         SelectedItem="{Binding Work}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Title}"
+                                               FontSize="16"
+                                               Margin="15,0" />
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <!--left-->
-        <Grid x:Name="grid"
-              Width="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <TextBlock Text="便签列表"
-                       FontSize="20"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       Margin="0 10 0 0" />
-            <ListBox Grid.Row="1"
-                     Margin="0 0 0 10"
-                     ItemsSource="{Binding Works}"
-                     SelectedItem="{Binding Work}"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <StackPanel>
-                                <TextBlock Text="{Binding Title}"
+                                    <TextBlock Text="{Binding InsertDate,StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                               FontSize="12"
+                                               Foreground="Gray"
+                                               Margin="15,0" />
+                                </StackPanel>
+                                <TextBlock Text="完成"
                                            FontSize="16"
-                                           Margin="15,0" />
-                                <Rectangle Height="10" />
-                                <TextBlock Text="{Binding InsertDate,StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
-                                           FontSize="12"
-                                           Foreground="Gray"
-                                           Margin="15,0" />
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Grid>
+                                           Margin="0 0 -20 0"
+                                           HorizontalAlignment="Right"
+                                           Foreground="Green"
+                                           VerticalAlignment="Bottom"
+                                           Visibility="{Binding Complete,Converter={StaticResource BoolToVisibilityConverters}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <CheckBox x:Name="AutoStart"
+                          Grid.Row="2"
+                          Content="开机自启"
+                          Margin="0 0 0 10"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Click="AutoStart_Click" />
+            </Grid>
 
-        <!--right-->
-        <Grid Grid.Column="1"
-              Margin="10,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+            <!--right-->
+            <Grid Grid.Column="1"
+                  Margin="10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-            <StackPanel x:Name="ColorZone"
-                        Grid.Row="0"
-                        Height="50"
-                        Margin="0">
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <Button Click="Button_Click"
-                            Padding="-5"
-                            BorderThickness="0">
-                        <Button.Content>
-                            <Image Source="/Images/path.png" />
-                        </Button.Content>
-                    </Button>
-                    <Rectangle Width="10" />
-                    <Button Content="新建"
-                            Command="{Binding CreateWorkCommand}" />
-                    <TextBlock Text="标题:"
-                               VerticalAlignment="Center" />
-                    <TextBox MinWidth="200"
-                             MaxWidth="600"
-                             FontSize="16"
-                             MaxLength="10"
-                             Text="{Binding Work.Title,UpdateSourceTrigger=PropertyChanged}" />
-                    <Button Content="删除"
-                            Command="{Binding DeleteWorkCommand}"
-                            CommandParameter="{Binding Work}" />
-                    <Button Content="保存"
-                            Command="{Binding SaveWorkCommand}" />
+                <StackPanel x:Name="ColorZone"
+                            Grid.Row="0"
+                            Height="50"
+                            Margin="0">
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10">
+                        <Button Click="Button_Click"
+                                Padding="0"
+                                BorderThickness="0"
+                                ToolTip="便签列表">
+                            <Button.Content>
+                                <Image Source="/Images/path.png" />
+                            </Button.Content>
+                        </Button>
+                        <Rectangle Width="10" />
+                        <Button Padding="5"
+                                BorderThickness="0"
+                                Command="{Binding CreateWorkCommand}"
+                                ToolTip="新建">
+                            <Button.Content>
+                                <Image Source="/Images/insert.png" />
+                            </Button.Content>
+                        </Button>
+                        <TextBlock Text="标题:"
+                                   VerticalAlignment="Center" />
+                        <TextBox Width="150"
+                                 FontSize="16"
+                                 MaxLength="10"
+                                 Text="{Binding Work.Title,UpdateSourceTrigger=PropertyChanged}"
+                                 IsEnabled="{Binding Work.Complete,Converter={StaticResource BoolToIsEnabledConverter}}" />
+                        <Button Padding="5"
+                                BorderThickness="0"
+                                Command="{Binding DeleteWorkCommand}"
+                                CommandParameter="{Binding Work}"
+                                ToolTip="删除">
+                            <Button.Content>
+                                <Image Source="/Images/delete.png" />
+                            </Button.Content>
+                        </Button>
+                        <Button Padding="5"
+                                BorderThickness="0"
+                                Command="{Binding SaveWorkCommand}"
+                                ToolTip="保存">
+                            <Button.Content>
+                                <Image Source="/Images/save.png" />
+                            </Button.Content>
+                        </Button>
+                        <Button Padding="5"
+                                BorderThickness="0"
+                                Width="30"
+                                Background="Transparent"
+                                Command="{Binding DoneWorkCommand}"
+                                ToolTip="完成任务">
+                            <Button.Content>
+                                <Image Source="/Images/complete.png" />
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+
                 </StackPanel>
-               
-            </StackPanel>
 
-            <!-- 工具栏 -->
-            <ToolBar Grid.Row="1">
-                <Button Name="BtnBold"
-                        Content="B"
-                        FontWeight="Bold"
-                        Click="BtnBold_Click"
-                        Width="30"
-                        ToolTip="加粗" />
-                <Button Name="BtnUnderline"
-                        Content="U"
-                        Click="BtnUnderline_Click"
-                        Width="30"
-                        ToolTip="下划线" />
-                <Button Name="BtnStrikethrough"
-                        Content="S"
-                        Click="BtnStrikethrough_Click"
-                        Width="30"
-                        ToolTip="横线" />
-                <Button Name="BtnItalic"
-                        Content="I"
-                        Click="BtnItalic_Click"
-                        Width="30"
-                        ToolTip="斜体" />
-            </ToolBar>
+                <!-- 工具栏 -->
+                <ToolBar Grid.Row="1"
+                         Margin="10 0">
+                    <Button Name="BtnBold"
+                            Content="B"
+                            FontWeight="Bold"
+                            Click="BtnBold_Click"
+                            Width="30"
+                            ToolTip="加粗" />
+                    <Button Name="BtnUnderline"
+                            Content="U"
+                            Click="BtnUnderline_Click"
+                            Width="30"
+                            ToolTip="下划线" />
+                    <Button Name="BtnStrikethrough"
+                            Content="S"
+                            Click="BtnStrikethrough_Click"
+                            Width="30"
+                            ToolTip="横线" />
+                    <Button Name="BtnItalic"
+                            Content="I"
+                            Click="BtnItalic_Click"
+                            Width="30"
+                            ToolTip="斜体" />
+                    <Rectangle Width="10" />
 
-            <!-- 富文本编辑区 -->
-            <RichTextBox Name="RichEditBox"
-                         Grid.Row="2"
-                         FontSize="18"
-                         Margin="10"
-                         FontFamily="Microsoft YaHei">
-                <RichTextBox.Resources>
-                    <!-- 隐式样式：所有 Paragraph 的 Margin 设为 0 -->
-                    <Style TargetType="Paragraph">
-                        <Setter Property="Margin"
-                                Value="0" />
-                    </Style>
-                </RichTextBox.Resources>
-                <FlowDocument>
-                    <Paragraph>
-                        <Run FontWeight="Bold">欢迎使用便签工具</Run>
-                        <LineBreak />
-                        字体大小默认为 18，你可以开始编辑了。
-                    </Paragraph>
-                </FlowDocument>
-            </RichTextBox>
+                </ToolBar>
 
+                <!-- 富文本编辑区 -->
+                <RichTextBox Name="RichEditBox"
+                             Grid.Row="2"
+                             FontSize="18"
+                             Margin="10"
+                             Background="#E6E4E2"
+                             FontFamily="Microsoft YaHei"
+                             IsEnabled="{Binding Work.Complete,Converter={StaticResource BoolToIsEnabledConverter}}">
+                    <RichTextBox.Resources>
+                        <!-- 隐式样式：所有 Paragraph 的 Margin 设为 0 -->
+                        <Style TargetType="Paragraph">
+                            <Setter Property="Margin"
+                                    Value="0" />
+                        </Style>
+                    </RichTextBox.Resources>
+                    <FlowDocument>
+                        <Paragraph>
+                            <Run FontWeight="Bold">欢迎使用便签工具</Run>
+                            <LineBreak />
+                            字体大小默认为 18，你可以开始编辑了。
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+
+            </Grid>
         </Grid>
-    </Grid>
+    </Border>
 
 
 </Window>

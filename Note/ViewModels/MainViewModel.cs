@@ -166,5 +166,13 @@ namespace Note.ViewModels
                 MessageBox.Show("删除成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
+        [RelayCommand]
+        void DoneWork()
+        {
+            if (Work == null) return;
+            Work.Complete = Work.Complete == 0 ? 1 : 0;
+            SqlSugarHelper.Db.Updateable(Work).ExecuteCommand();
+        }
     }
 }

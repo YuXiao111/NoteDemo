@@ -13,7 +13,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="Images\delete.png" />
+		<None Remove="Images\insert.png" />
 		<None Remove="Images\path.png" />
+		<None Remove="Images\save.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -34,7 +37,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Images\complete.png" />
+		<Resource Include="Images\delete.png" />
+		<Resource Include="Images\insert.png" />
 		<Resource Include="Images\path.png" />
+		<Resource Include="Images\save.png" />
 	</ItemGroup>
 
 </Project>

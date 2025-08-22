@@ -33,7 +33,7 @@ namespace Note.Views
             DataContext = vm;
             int margin = 10;
             this.Left = SystemParameters.WorkArea.Width - this.Width - margin;
-            this.Top =  margin;
+            this.Top = margin;
             InitData();
             ColorZone.MouseMove += (s, e) =>
             {
@@ -44,6 +44,8 @@ namespace Note.Views
 
         private void MainView_Loaded(object sender, RoutedEventArgs e)
         {
+            int result = IniHelper.ReadSetting();
+            AutoStart.IsChecked = result == 1 ? true : false;
             vm.InitRichEdit(RichEditBox);
         }
 
@@ -197,7 +199,9 @@ namespace Note.Views
             grid.Width = (grid.Width == 0) ? 200 : 0;
         }
 
-
-
+        private void AutoStart_Click(object sender, RoutedEventArgs e)
+        {
+            RegistryHelper.RegistryAutoStart(AutoStart.IsChecked== true?true:false);
+        }
     }
 }
