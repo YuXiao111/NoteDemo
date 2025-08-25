@@ -105,6 +105,11 @@ namespace Note.ViewModels
             }
             if (Work.id == 0)
             {
+                if (SqlSugarHelper.Db.Queryable<WorkEntity>().Any(x => x.Title == Work.Title))
+                {
+                    MessageBox.Show("标题已存在！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
                 entity.InsertDate = DateTime.Now;
                 entity.Title = Work.Title;
                 //entity.Content = "请在此输入内容...";          
