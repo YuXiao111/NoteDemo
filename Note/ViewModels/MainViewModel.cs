@@ -79,13 +79,10 @@ namespace Note.ViewModels
 
         private void CreateWork()
         {
-            var entity = new WorkEntity();
-            entity.InsertDate = DateTime.Now;
-            entity.Title = $"{DateTime.Now:MMddHHmmss}";
-            //entity.Content = "请在此输入内容...";
+            Work = null;
+            Work = new WorkEntity();
+            Work.Title = $"{DateTime.Now:MMddHHmmss}";
             LoadRtf($"{SaveFilePath}\\请在此输入标题.rtf");
-            SqlSugarHelper.Db.Insertable(entity).ExecuteCommand();
-            LoadWorks();
         }
 
         private void LoadWorks()
@@ -98,17 +95,29 @@ namespace Note.ViewModels
         }
 
         [RelayCommand]
-        public void OnSaveWork()
+        public void OnSaveWork(WorkEntity entity)
         {
             if (Work == null) return;
-            var result = SqlSugarHelper.Db.Queryable<WorkEntity>().Where(x => x.Title == Work.Title).ToList();
-            SaveRtf($"{SaveFilePath}\\{Work.Title}.rtf");
-            if (result.Count > 1)
+            if (string.IsNullOrEmpty(Work.Title))
             {
-                MessageBox.Show("标题重复，请修改标题！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("标题不能为空！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            SqlSugarHelper.Db.Updateable(Work).ExecuteCommand();
+            if (Work.id == 0)
+            {
+                entity.InsertDate = DateTime.Now;
+                entity.Title = Work.Title;
+                //entity.Content = "请在此输入内容...";          
+                SqlSugarHelper.Db.Insertable(entity).ExecuteCommand();
+                SaveRtf($"{SaveFilePath}\\{Work.Title}.rtf");
+                LoadWorks();
+            }
+            else
+            {
+                SqlSugarHelper.Db.Updateable(Work).ExecuteCommand();
+                SaveRtf($"{SaveFilePath}\\{Work.Title}.rtf");
+                LoadWorks();
+            }
             if (!IsCloseInfo)
                 MessageBox.Show("保存成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
         }

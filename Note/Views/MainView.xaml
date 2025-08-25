@@ -141,7 +141,7 @@
                                  MaxLength="10"
                                  Text="{Binding Work.Title,UpdateSourceTrigger=PropertyChanged}"
                                  IsEnabled="{Binding Work.Complete,Converter={StaticResource BoolToIsEnabledConverter}}" />
-                        <Button Padding="5"
+                        <Button Padding="6"
                                 BorderThickness="0"
                                 Command="{Binding DeleteWorkCommand}"
                                 CommandParameter="{Binding Work}"
@@ -153,6 +153,7 @@
                         <Button Padding="5"
                                 BorderThickness="0"
                                 Command="{Binding SaveWorkCommand}"
+                                CommandParameter="{Binding Work}"
                                 ToolTip="保存">
                             <Button.Content>
                                 <Image Source="/Images/save.png" />

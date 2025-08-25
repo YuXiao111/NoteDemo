@@ -190,7 +190,7 @@ namespace Note.Views
         {
             vm.IsCloseInfo = true;
             base.OnClosing(e);
-            vm.OnSaveWork();
+            vm.OnSaveWork(vm.Work);
             Application.Current.Shutdown();
         }
 
