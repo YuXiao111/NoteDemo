@@ -129,11 +129,11 @@ namespace Note.ViewModels
             else
             {
                 SqlSugarHelper.Db.Updateable(Work).ExecuteCommand();
-                SaveRtf($"{SaveFilePath}\\{Work.Title}.rtf");
                 if (System.IO.File.Exists($"{SaveFilePath}\\{OldWork.Title}.rtf"))
                 {
                     System.IO.File.Delete($"{SaveFilePath}\\{OldWork.Title}.rtf");
                 }
+                SaveRtf($"{SaveFilePath}\\{Work.Title}.rtf");
                 LoadWorks();
             }
             if (!IsCloseInfo)

@@ -18,7 +18,8 @@
         AllowsTransparency="True"
         Loaded="MainView_Loaded"
         Background="Transparent"
-        xmlns:cv="clr-namespace:Note.Converter">
+        xmlns:cv="clr-namespace:Note.Converter"
+        xmlns:hc="https://handyorg.github.io/handycontrol">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome ResizeBorderThickness="5"
                             CaptionHeight="0"
@@ -197,8 +198,16 @@
                             Click="BtnItalic_Click"
                             Width="30"
                             ToolTip="斜体" />
+                    <ToggleButton x:Name="btn_color"
+                                  Content="C"
+                                  Width="30"
+                                  ToolTip="颜色" />
+                    <Popup PlacementTarget="{Binding ElementName=btn_color}"
+                           Placement="Bottom"
+                           IsOpen="{Binding IsChecked,ElementName=btn_color}">
+                        <hc:ColorPicker x:Name="color_picker" />
+                    </Popup>
                     <Rectangle Width="10" />
-
                 </ToolBar>
 
                 <!-- 富文本编辑区 -->

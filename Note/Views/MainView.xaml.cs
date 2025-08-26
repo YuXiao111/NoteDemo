@@ -26,6 +26,7 @@ namespace Note.Views
     public partial class MainView : Window
     {
         private MainViewModel vm;
+        private Brush NoteBackground = new SolidColorBrush(Colors.Red);
         public MainView()
         {
             InitializeComponent();
@@ -39,6 +40,28 @@ namespace Note.Views
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                     this.DragMove();
+            };
+            color_picker.SelectedColorChanged += delegate { 
+               
+            };
+            color_picker.Confirmed += delegate
+            {
+                this.NoteBackground = color_picker.SelectedBrush;
+                btn_color.IsChecked = false;
+                var richTextBox = RichEditBox;
+
+                // 检查是否有选中内容
+                if (richTextBox.Selection != null)
+                {
+                    // 方法 1：通过 ApplyPropertyValue 批量应用属性（推荐）
+                    richTextBox.Selection.ApplyPropertyValue(Run.ForegroundProperty, NoteBackground); // 改为红色
+
+                    // 方法 2：直接设置选中范围的 Foreground（效果相同）
+                    // richTextBox.Selection.Foreground = Brushes.Red;
+                }
+            };
+            color_picker.Canceled += delegate {
+                btn_color.IsChecked = false; 
             };
         }
 
@@ -203,5 +226,6 @@ namespace Note.Views
         {
             RegistryHelper.RegistryAutoStart(AutoStart.IsChecked== true?true:false);
         }
+
     }
 }
