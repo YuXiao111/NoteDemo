@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,13 @@ namespace Note.Models
 
         [ObservableProperty]
         public DateTime? insertDate = null;
+
+        // 深拷贝方法
+        public WorkEntity DeepClone()
+        {
+            // 序列化当前对象为JSON字符串，再反序列化为新对象
+            string json = JsonConvert.SerializeObject(this);
+            return JsonConvert.DeserializeObject<WorkEntity>(json);
+        }
     }
 }

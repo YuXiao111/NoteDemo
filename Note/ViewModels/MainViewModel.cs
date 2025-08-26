@@ -23,6 +23,9 @@ namespace Note.ViewModels
         [ObservableProperty]
         public WorkEntity work;
 
+        [ObservableProperty]
+        public WorkEntity oldWork;
+
         public static string myDocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         [ObservableProperty]
         string saveFilePath = Path.Combine(myDocumentsPath, "NoteApp");
@@ -42,6 +45,11 @@ namespace Note.ViewModels
             FileHelper.TryCreateParentDir(SaveFilePath);
             FileHelper.CopyFile(SaveFilePath);
             LoadWorks();
+            var result = SqlSugarHelper.Db.Queryable<WorkEntity>().ToList();
+            if (result.Count == 0)
+            {
+                CreateWork();
+            }
         }
 
 
@@ -91,6 +99,7 @@ namespace Note.ViewModels
             if (Works != null && Works.Any())
             {
                 Work = Works.First();
+                OldWork = Work?.DeepClone();
             }
         }
 
@@ -121,6 +130,10 @@ namespace Note.ViewModels
             {
                 SqlSugarHelper.Db.Updateable(Work).ExecuteCommand();
                 SaveRtf($"{SaveFilePath}\\{Work.Title}.rtf");
+                if (System.IO.File.Exists($"{SaveFilePath}\\{OldWork.Title}.rtf"))
+                {
+                    System.IO.File.Delete($"{SaveFilePath}\\{OldWork.Title}.rtf");
+                }
                 LoadWorks();
             }
             if (!IsCloseInfo)
