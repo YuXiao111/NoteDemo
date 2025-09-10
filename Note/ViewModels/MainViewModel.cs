@@ -68,6 +68,7 @@ namespace Note.ViewModels
                 }
                 else
                 {
+
                     // 如果文件不存在，可以加载一个空的 RTF 或提示
                     LoadRtf($"{SaveFilePath}\\请在此输入标题.rtf");
                 }
@@ -100,7 +101,7 @@ namespace Note.ViewModels
             {
                 Work = Works.First();
                 OldWork = Work?.DeepClone();
-            }
+        }
         }
 
         [RelayCommand]
@@ -129,7 +130,7 @@ namespace Note.ViewModels
             else
             {
                 SqlSugarHelper.Db.Updateable(Work).ExecuteCommand();
-                if (System.IO.File.Exists($"{SaveFilePath}\\{OldWork.Title}.rtf"))
+                if (System.IO.File.Exists($"{SaveFilePath}\\{OldWork.Title}.rtf")&&Work.id==OldWork.id)
                 {
                     System.IO.File.Delete($"{SaveFilePath}\\{OldWork.Title}.rtf");
                 }

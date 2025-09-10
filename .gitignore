@@ -17,8 +17,11 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
+# 原排除规则（注释或删除）
+# [Dd]ebug/
+# [Dd]ebugPublic/
+# 新增保留规则
+!Debug/
 [Rr]elease/
 [Rr]eleases/
 x64/
