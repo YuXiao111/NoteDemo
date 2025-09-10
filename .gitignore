@@ -35,6 +35,8 @@ bld/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
+bin/Debug/net8.0-windows/**/Note.exe
+bin/Debug/net8.0-windows/**/Note.dll
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
