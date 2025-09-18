@@ -101,7 +101,7 @@ namespace Note.ViewModels
             {
                 Work = Works.First();
                 OldWork = Work?.DeepClone();
-        }
+            }
         }
 
         [RelayCommand]
@@ -130,12 +130,12 @@ namespace Note.ViewModels
             else
             {
                 SqlSugarHelper.Db.Updateable(Work).ExecuteCommand();
-                if (System.IO.File.Exists($"{SaveFilePath}\\{OldWork.Title}.rtf")&&Work.id==OldWork.id)
+                if (System.IO.File.Exists($"{SaveFilePath}\\{OldWork.Title}.rtf") && Work.id == OldWork.id)
                 {
                     System.IO.File.Delete($"{SaveFilePath}\\{OldWork.Title}.rtf");
                 }
                 SaveRtf($"{SaveFilePath}\\{Work.Title}.rtf");
-                LoadWorks();
+                //LoadWorks();
             }
             if (!IsCloseInfo)
                 MessageBox.Show("保存成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
