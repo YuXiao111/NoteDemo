@@ -17,11 +17,8 @@
 mono_crash.*
 
 # Build results
-# 原排除规则（注释或删除）
-# [Dd]ebug/
-# [Dd]ebugPublic/
-# 新增保留规则
-!Debug/
+[Dd]ebug/
+[Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 x64/
@@ -30,7 +27,9 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-# [Bb]in/
+[Bb]in/
+[Bb]in/**
+**/[Bb]in/**
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
@@ -364,4 +363,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/Note/bin/Debug/net8.0-windows/win-x64/Note.dll
